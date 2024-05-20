@@ -5,7 +5,7 @@ import axios from 'axios'
 import CategoryItem from '../category-item/category-item.component'
 
 //styles
-import './categories.styles.css'
+import { CategoriesContainer, CategoriesContent } from './categories.styles'
 
 //utilities
 import Category from '../../types/category.types'
@@ -31,15 +31,15 @@ const Categories = () => {
   }, [])
 
   return (
-    <div className='categories-container'>
-      <div className='categories-content'>
+    <CategoriesContainer>
+      <CategoriesContent>
         {categories.map((category) => (
           <div>
             <CategoryItem category={category} key={category.id} />
           </div>
         ))}
-      </div>
-    </div>
+      </CategoriesContent>
+    </CategoriesContainer>
   )
 }
 
