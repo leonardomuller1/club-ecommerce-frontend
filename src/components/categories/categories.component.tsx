@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-//utilities
-import Category from '../../types/category.types'
-import env from '../../config/env.config'
+//components
+import CategoryItem from '../category-item/category-item.component'
 
 //styles
 import './categories.styles.css'
+
+//utilities
+import Category from '../../types/category.types'
+import env from '../../config/env.config'
 
 const Categories = () => {
   const [categories, setCategories] = useState<Category[]>([])
@@ -29,7 +32,13 @@ const Categories = () => {
 
   return (
     <div className='categories-container'>
-      <div className='categories-content'></div>
+      <div className='categories-content'>
+        {categories.map((category) => (
+          <div>
+            <CategoryItem category={category} key={category.id} />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
