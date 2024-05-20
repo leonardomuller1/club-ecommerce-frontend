@@ -1,10 +1,10 @@
 import { FunctionComponent } from 'react'
 
+//Styles
+import { CategoryItemContainer, CategoryName } from './category-item.styles'
+
 // Utilities
 import Category from '../../types/category.types'
-
-//Styles
-import 'category-item.styles.css'
 
 interface CategoryItemProps {
   category: Category
@@ -12,15 +12,12 @@ interface CategoryItemProps {
 
 const CategoryItem: FunctionComponent<CategoryItemProps> = ({ category }) => {
   return (
-    <div
-      className='category-item-container'
-      style={{ backgroundImage: `url('${category.imageUrl}')` }}
-    >
-      <div className='category-name'>
+    <CategoryItemContainer backgroundImage={category.imageUrl}>
+      <CategoryName>
         <p>{category.displayName}</p>
         <p>Explorar</p>
-      </div>
-    </div>
+      </CategoryName>
+    </CategoryItemContainer>
   )
 }
 
