@@ -26,8 +26,6 @@ const LoginPage = () => {
     handleSubmit
   } = useForm()
 
-  console.log('Errors:', errors)
-
   const handleSubmitPress = (data: any) => {
     console.log({ data })
   }
