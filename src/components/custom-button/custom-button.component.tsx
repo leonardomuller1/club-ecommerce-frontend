@@ -1,8 +1,8 @@
 import { FunctionComponent, ButtonHTMLAttributes } from 'react'
 
+//styles
 import { CustomButtonContainer, IconContainer } from './custom-button.styles'
 
-// Definir o tipo das props
 interface CustomButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: string
   startIcon?: React.ReactNode
