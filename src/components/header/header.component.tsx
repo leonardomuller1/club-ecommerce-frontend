@@ -17,7 +17,7 @@ const Header = () => {
   }
 
   const handleSingUpClick = () => {
-    navigate('singup')
+    navigate('/singup')
   }
 
   return (
