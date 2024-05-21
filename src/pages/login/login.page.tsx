@@ -3,6 +3,13 @@ import { BsGoogle } from 'react-icons/bs'
 import { FiLogIn } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import { isEmail } from 'validator'
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import {
+  AuthError,
+  AuthErrorCodes,
+  signInWithEmailAndPassword,
+  signInWithPopup
+} from 'firebase/auth'
 
 // components
 import Header from '../../components/header/header.component'
@@ -18,12 +25,9 @@ import {
   LoginInputContainer,
   LoginSubtitle
 } from './login.styles'
-import {
-  AuthError,
-  AuthErrorCodes,
-  signInWithEmailAndPassword
-} from 'firebase/auth'
-import { auth } from '../../config/firebase.config'
+
+//utilits
+import { auth, db, googleProvider } from '../../config/firebase.config'
 
 interface LoginForm {
   email: string
@@ -56,6 +60,36 @@ const LoginPage = () => {
     }
   }
 
+  const handleSignInWithGooglePress = async () => {
+    try {
+      const userCredencials = await signInWithPopup(auth, googleProvider)
+
+      const querySnapshpt = await getDocs(
+        query(
+          collection(db, 'users'),
+          where('id', '==', userCredencials.user.uid)
+        )
+      )
+
+      const user = querySnapshpt.docs[0]?.data()
+
+      if (!user) {
+        const firstName = userCredencials.user.displayName?.split(' ')[0]
+        const lastName = userCredencials.user.displayName?.split(' ')[1]
+
+        await addDoc(collection(db, 'users'), {
+          id: userCredencials.user.uid,
+          email: userCredencials.user.email,
+          firstName: firstName,
+          lastName: lastName,
+          provider: 'google'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       <Header />
@@ -63,7 +97,10 @@ const LoginPage = () => {
       <LoginContainer>
         <LoginContent>
           <LoginHeadline>Entre com a sua conta</LoginHeadline>
-          <CustomButton startIcon={<BsGoogle size={18} />}>
+          <CustomButton
+            onClick={handleSignInWithGooglePress}
+            startIcon={<BsGoogle size={18} />}
+          >
             Entrar com o Google
           </CustomButton>
           <LoginSubtitle>ou entre com o seu e-mail</LoginSubtitle>
