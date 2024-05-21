@@ -4,6 +4,7 @@ import { FiLogIn } from 'react-icons/fi'
 //components
 import Header from '../../components/header/header.component'
 import CustomButton from '../../components/custom-button/custom-button.component'
+import CustomInput from '../../components/custom-input/custom-input.component'
 
 //styles
 import {
@@ -26,8 +27,14 @@ const LoginPage = () => {
             Entrar com o google
           </CustomButton>
           <LoginSubtitle>ou entre com o seu e-mail</LoginSubtitle>
-          <LoginInputContainer>{/*Email Input */}</LoginInputContainer>
-          <LoginInputContainer>{/*Passowrd Input */}</LoginInputContainer>
+          <LoginInputContainer>
+            <p>E-mail</p>
+            <CustomInput placeholder='Digite seu e-mail' type='email' />
+          </LoginInputContainer>
+          <LoginInputContainer>
+            <p>Senha</p>
+            <CustomInput placeholder='Digite sua senha' type='password' />
+          </LoginInputContainer>
 
           <CustomButton startIcon={<FiLogIn size={18} />}>Entrar</CustomButton>
         </LoginContent>
