@@ -1,12 +1,14 @@
+import React from 'react'
 import { BsGoogle } from 'react-icons/bs'
 import { FiLogIn } from 'react-icons/fi'
+import { useForm } from 'react-hook-form'
 
-//components
+// components
 import Header from '../../components/header/header.component'
 import CustomButton from '../../components/custom-button/custom-button.component'
 import CustomInput from '../../components/custom-input/custom-input.component'
 
-//styles
+// styles
 import {
   LoginContainer,
   LoginContent,
@@ -16,6 +18,18 @@ import {
 } from './login.styles'
 
 const LoginPage = () => {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit
+  } = useForm()
+
+  console.log('Errors:', errors)
+
+  const handleSubmitPress = (data: any) => {
+    console.log({ data })
+  }
+
   return (
     <>
       <Header />
@@ -24,19 +38,34 @@ const LoginPage = () => {
         <LoginContent>
           <LoginHeadline>Entre com a sua conta</LoginHeadline>
           <CustomButton startIcon={<BsGoogle size={18} />}>
-            Entrar com o google
+            Entrar com o Google
           </CustomButton>
           <LoginSubtitle>ou entre com o seu e-mail</LoginSubtitle>
           <LoginInputContainer>
             <p>E-mail</p>
-            <CustomInput placeholder='Digite seu e-mail' type='email' />
+            <CustomInput
+              hasError={errors.email ? true : false}
+              placeholder='Digite seu e-mail'
+              type='email'
+              {...register('email', { required: true })}
+            />
           </LoginInputContainer>
           <LoginInputContainer>
             <p>Senha</p>
-            <CustomInput placeholder='Digite sua senha' type='password' />
+            <CustomInput
+              hasError={errors.password ? true : false}
+              placeholder='Digite sua senha'
+              type='password'
+              {...register('password', { required: true })}
+            />
           </LoginInputContainer>
 
-          <CustomButton startIcon={<FiLogIn size={18} />}>Entrar</CustomButton>
+          <CustomButton
+            startIcon={<FiLogIn size={18} />}
+            onClick={handleSubmit(handleSubmitPress)}
+          >
+            Entrar
+          </CustomButton>
         </LoginContent>
       </LoginContainer>
     </>
