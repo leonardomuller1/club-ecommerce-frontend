@@ -1,6 +1,10 @@
 import { FiLogIn } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import {
+  AuthError,
+  createUserWithEmailAndPassword,
+  AuthErrorCodes
+} from 'firebase/auth'
 import { addDoc, collection } from 'firebase/firestore'
 
 //components
@@ -34,6 +38,7 @@ const SingUpPage = () => {
     register,
     formState: { errors },
     watch,
+    setError,
     handleSubmit
   } = useForm<SingUpForm>()
 
@@ -54,7 +59,11 @@ const SingUpPage = () => {
         lastName: data.lastName
       })
     } catch (error) {
-      console.log(error)
+      const _error = error as AuthError
+
+      if (_error.code === AuthErrorCodes.EMAIL_EXISTS) {
+        return setError('email', { type: 'alreadyInUse' })
+      }
     }
   }
 
@@ -107,6 +116,10 @@ const SingUpPage = () => {
               <InputErrorMessage>E-mail é obrigatório</InputErrorMessage>
             )}
 
+            {errors?.email?.type === 'alreadyInUse' && (
+              <InputErrorMessage>Este e-mail já foi usado</InputErrorMessage>
+            )}
+
             {errors?.email?.type === 'validate' && (
               <InputErrorMessage>Precisa ser e-mail valido</InputErrorMessage>
             )}
@@ -117,11 +130,17 @@ const SingUpPage = () => {
               hasError={!!errors?.password}
               placeholder='Digite sua senha'
               type='password'
-              {...register('password', { required: true })}
+              {...register('password', { required: true, minLength: 6 })}
             />
 
             {errors?.password?.type === 'required' && (
               <InputErrorMessage>Senha é obrigatória</InputErrorMessage>
+            )}
+
+            {errors?.password?.type === 'minLength' && (
+              <InputErrorMessage>
+                A senha deve ter no minimo 6 caracteres
+              </InputErrorMessage>
             )}
           </SignUpInputContainer>
           <SignUpInputContainer>
@@ -132,14 +151,20 @@ const SingUpPage = () => {
               type='password'
               {...register('passwordConfirmation', {
                 required: true,
+                minLength: 6,
                 validate: (value) => {
                   return value === watchPassword
                 }
               })}
             />
 
+            {errors?.passwordConfirmation?.type === 'minLength' && (
+              <InputErrorMessage>
+                A senha deve ter no minimo 6 caracteres
+              </InputErrorMessage>
+            )}
             {errors?.passwordConfirmation?.type === 'required' && (
-              <InputErrorMessage>Confirme a sua </InputErrorMessage>
+              <InputErrorMessage>Confirme a sua senha</InputErrorMessage>
             )}
 
             {errors?.passwordConfirmation?.type === 'validate' && (
