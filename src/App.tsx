@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
 import { collection, getDocs, query, where } from 'firebase/firestore'
@@ -13,13 +13,16 @@ import { auth, db } from './config/firebase.config'
 import { UserContext } from './contexts/user.context'
 
 const App = () => {
+  const [isInitializing, setIsInitializing] = useState(true)
+
   const { isAutheticated, loginUser, logoutUser } = useContext(UserContext)
 
   onAuthStateChanged(auth, async (user) => {
     // se esta fazendo logout
     const isSigningOut = isAutheticated && !user
     if (isSigningOut) {
-      return logoutUser()
+      logoutUser()
+      return setIsInitializing(false)
     }
 
     // se esta fazendo login
@@ -31,11 +34,14 @@ const App = () => {
 
       const userFromFirestore = querySnapchot.docs[0]?.data()
 
-      return loginUser(userFromFirestore as any)
+      loginUser(userFromFirestore as any)
+      return setIsInitializing(false)
     }
+    return setIsInitializing(false)
   })
 
-  console.log({ isAutheticated })
+  if (isInitializing) return null
+
   return (
     <BrowserRouter>
       <Routes>
