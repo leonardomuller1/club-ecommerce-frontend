@@ -1,3 +1,5 @@
+import { useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FiLogIn } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import {
@@ -24,6 +26,7 @@ import {
 
 //utilits
 import { auth, db } from '../../config/firebase.config'
+import { UserContext } from '../../contexts/user.context'
 
 interface SingUpForm {
   firstName: string
@@ -43,6 +46,16 @@ const SingUpPage = () => {
   } = useForm<SingUpForm>()
 
   const watchPassword = watch('password')
+
+  const { isAutheticated } = useContext(UserContext)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isAutheticated) {
+      navigate('/')
+    }
+  }, [isAutheticated])
 
   const handleSubmitPress = async (data: SingUpForm) => {
     try {

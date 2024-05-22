@@ -1,7 +1,8 @@
-import React from 'react'
+import { useContext, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { BsGoogle } from 'react-icons/bs'
 import { FiLogIn } from 'react-icons/fi'
-import { useForm } from 'react-hook-form'
 import { isEmail } from 'validator'
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 import {
@@ -28,6 +29,7 @@ import {
 
 //utilits
 import { auth, db, googleProvider } from '../../config/firebase.config'
+import { UserContext } from '../../contexts/user.context'
 
 interface LoginForm {
   email: string
@@ -41,6 +43,15 @@ const LoginPage = () => {
     handleSubmit,
     setError
   } = useForm<LoginForm>()
+
+  const { isAutheticated } = useContext(UserContext)
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (isAutheticated) {
+      navigate('/')
+    }
+  }, [isAutheticated])
 
   const handleSubmitPress = async (data: LoginForm) => {
     try {
