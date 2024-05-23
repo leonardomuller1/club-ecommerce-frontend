@@ -18,8 +18,11 @@ import { UserContext } from '../../contexts/user.context'
 
 const Header = () => {
   const navigate = useNavigate()
-
   const { isAutheticated } = useContext(UserContext)
+
+  const handleLogiClick = () => {
+    navigate('/')
+  }
   const handleLoginClick = () => {
     navigate('/login')
   }
@@ -30,7 +33,7 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <HeaderTitle>CLUB CLOTHING</HeaderTitle>
+      <HeaderTitle onClick={handleLogiClick}>CLUB CLOTHING</HeaderTitle>
       <HeaderItems>
         <HeaderItem>Explorar</HeaderItem>
         {!isAutheticated && (
