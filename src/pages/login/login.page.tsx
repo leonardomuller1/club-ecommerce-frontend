@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { BsGoogle } from 'react-icons/bs'
@@ -17,6 +17,7 @@ import Header from '../../components/header/header.component'
 import CustomButton from '../../components/custom-button/custom-button.component'
 import CustomInput from '../../components/custom-input/custom-input.component'
 import InputErrorMessage from '../../components/input-error-message/input-error-message.component'
+import Loading from '../../components/loading/loading.component'
 
 // styles
 import {
@@ -43,7 +44,7 @@ const LoginPage = () => {
     handleSubmit,
     setError
   } = useForm<LoginForm>()
-
+  const [isLoading, setIsLoading] = useState(false)
   const { isAutheticated } = useContext(UserContext)
 
   const navigate = useNavigate()
@@ -55,6 +56,7 @@ const LoginPage = () => {
 
   const handleSubmitPress = async (data: LoginForm) => {
     try {
+      setIsLoading(true)
       const userCredentials = await signInWithEmailAndPassword(
         auth,
         data.email,
@@ -68,11 +70,14 @@ const LoginPage = () => {
       if (_error.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
         return setError('password', { type: 'mismatch' })
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const handleSignInWithGooglePress = async () => {
     try {
+      setIsLoading(true)
       const userCredencials = await signInWithPopup(auth, googleProvider)
 
       const querySnapshpt = await getDocs(
@@ -98,6 +103,8 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -105,6 +112,7 @@ const LoginPage = () => {
     <>
       <Header />
 
+      {isLoading && <Loading />}
       <LoginContainer>
         <LoginContent>
           <LoginHeadline>Entre com a sua conta</LoginHeadline>
