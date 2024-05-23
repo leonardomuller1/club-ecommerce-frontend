@@ -1,5 +1,8 @@
 import { FunctionComponent, useContext, useEffect } from 'react'
 
+//components
+import CategoryOverview from '../category-overview/category-overview.component'
+
 //styles
 import { Container } from './categories-overview.styles'
 
@@ -18,7 +21,7 @@ const CategoriesOverview: FunctionComponent = () => {
   return (
     <Container>
       {categories.map((category) => (
-        <p key={category.id}>{category.displayName}</p>
+        <CategoryOverview category={category} key={category.id} />
       ))}
     </Container>
   )
