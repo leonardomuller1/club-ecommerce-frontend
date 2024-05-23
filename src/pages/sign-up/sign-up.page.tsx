@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FiLogIn } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
@@ -14,7 +14,7 @@ import CustomButton from '../../components/custom-button/custom-button.component
 import CustomInput from '../../components/custom-input/custom-input.component'
 import Header from '../../components/header/header.component'
 import InputErrorMessage from '../../components/input-error-message/input-error-message.component'
-import isEmail from 'validator/lib/isEmail'
+import Loading from '../../components/loading/loading.component'
 
 //styles
 import {
@@ -27,6 +27,7 @@ import {
 //utilits
 import { auth, db } from '../../config/firebase.config'
 import { UserContext } from '../../contexts/user.context'
+import isEmail from 'validator/lib/isEmail'
 
 interface SingUpForm {
   firstName: string
@@ -45,6 +46,8 @@ const SingUpPage = () => {
     handleSubmit
   } = useForm<SingUpForm>()
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const watchPassword = watch('password')
 
   const { isAutheticated } = useContext(UserContext)
@@ -59,6 +62,7 @@ const SingUpPage = () => {
 
   const handleSubmitPress = async (data: SingUpForm) => {
     try {
+      setIsLoading(true)
       const userCredentials = await createUserWithEmailAndPassword(
         auth,
         data.email,
@@ -78,13 +82,15 @@ const SingUpPage = () => {
       if (_error.code === AuthErrorCodes.EMAIL_EXISTS) {
         return setError('email', { type: 'alreadyInUse' })
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
     <>
       <Header />
-
+      {isLoading && <Loading />}
       <SignUpContainer>
         <SignUpContent>
           <SignUpHeadline> Crie sua conta</SignUpHeadline>
