@@ -12,6 +12,7 @@ import SingUpPage from './pages/sign-up/sign-up.page'
 import { auth, db } from './config/firebase.config'
 import { UserContext } from './contexts/user.context'
 import { userConvert } from './converts/firestore.converters'
+import Loading from './components/loading/loading.component'
 
 const App = () => {
   const [isInitializing, setIsInitializing] = useState(true)
@@ -44,7 +45,7 @@ const App = () => {
     return setIsInitializing(false)
   })
 
-  if (isInitializing) return null
+  if (isInitializing) return <Loading />
 
   return (
     <BrowserRouter>
