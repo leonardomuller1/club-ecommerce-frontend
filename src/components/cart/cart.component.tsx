@@ -3,6 +3,7 @@ import { BsCartCheck } from 'react-icons/bs'
 
 //component
 import CustomButton from '../custom-button/custom-button.component'
+import CartItem from '../cart-item/cart-item.component'
 
 //styles
 import {
@@ -25,7 +26,9 @@ const Cart: FunctionComponent = () => {
       <CartContent>
         <CartTitle>Seu Carrinho</CartTitle>
 
-        {/*Produtos */}
+        {products.map((product) => (
+          <CartItem key={product.id} product={product} />
+        ))}
 
         <CartTotal>Total: R$9999</CartTotal>
 
