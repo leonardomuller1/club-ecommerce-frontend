@@ -2,6 +2,7 @@ import {
   FunctionComponent,
   ReactNode,
   createContext,
+  useEffect,
   useMemo,
   useState
 } from 'react'
@@ -43,6 +44,25 @@ const CartContextProvider: FunctionComponent<CartContextProviderProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [products, setProducts] = useState<CartProduct[]>([])
+
+  let recuperado = 0 //controle se veio do localstorage ou não -  0 nao e 1 sim
+  useEffect(() => {
+    const productsFromLocalStorage = JSON.parse(
+      localStorage.getItem('cartProducts')!
+    )
+
+    setProducts(productsFromLocalStorage)
+
+    recuperado = 1
+  }, [])
+
+  useEffect(() => {
+    if (recuperado == 0) {
+      localStorage.setItem('cartProducts', JSON.stringify(products))
+    }
+
+    recuperado = 0
+  }, [products])
 
   const productsCount = useMemo(() => {
     return products.reduce((acc, currentProduct) => {
