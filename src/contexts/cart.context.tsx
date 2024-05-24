@@ -4,13 +4,13 @@ import CartProduct from '../types/cart.types'
 interface ICartContext {
   isVisible: boolean
   products: CartProduct[]
-  toogleCart: () => void
+  toggleCart: () => void
 }
 
-const CartContext = createContext<ICartContext>({
+export const CartContext = createContext<ICartContext>({
   isVisible: false,
   products: [],
-  toogleCart: () => {}
+  toggleCart: () => {}
 })
 
 interface CartContextProviderProps {
@@ -23,12 +23,12 @@ const CartContextProvider: FunctionComponent<CartContextProviderProps> = ({
   const [isVisible, setIsVisible] = useState(false)
   const [products, setProducts] = useState<CartProduct[]>([])
 
-  const toogleCart = () => {
+  const toggleCart = () => {
     setIsVisible((prevState) => !prevState)
   }
 
   return (
-    <CartContext.Provider value={{ isVisible, products, toogleCart }}>
+    <CartContext.Provider value={{ isVisible, products, toggleCart }}>
       {children}
     </CartContext.Provider>
   )
