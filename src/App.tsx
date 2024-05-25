@@ -10,16 +10,17 @@ import CategoryDetailsPage from './pages/category-details/category-details.page'
 import CheckoutPage from './pages/checkout/checkout.page'
 import LoginPage from './pages/login/login.page'
 import SingUpPage from './pages/sign-up/sign-up.page'
-
-//Utilities
-import { auth, db } from './config/firebase.config'
-import { UserContext } from './contexts/user.context'
-import { userConvert } from './converts/firestore.converters'
+import PaymentConfirmationPage from './pages/payment-confirmation/payment-confirmation.page'
 
 //Components
 import Loading from './components/loading/loading.component'
 import Cart from './components/cart/cart.component'
 import AuthenticationGuard from './guards/authentication.guard'
+
+//Utilities
+import { auth, db } from './config/firebase.config'
+import { UserContext } from './contexts/user.context'
+import { userConvert } from './converts/firestore.converters'
 
 const App = () => {
   const [isInitializing, setIsInitializing] = useState(true)
@@ -67,6 +68,10 @@ const App = () => {
               <CheckoutPage />
             </AuthenticationGuard>
           }
+        />
+        <Route
+          path='/payment-confirmation'
+          element={<PaymentConfirmationPage />}
         />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/singup' element={<SingUpPage />} />
