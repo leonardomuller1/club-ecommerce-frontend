@@ -4,14 +4,14 @@ import User from '../types/user.types'
 
 interface IUserContext {
   currentUser: User | null
-  isAutheticated: boolean
+  isAuthenticated: boolean
   loginUser: (user: User) => void
   logoutUser: () => void
 }
 
 export const UserContext = createContext<IUserContext>({
   currentUser: null,
-  isAutheticated: false,
+  isAuthenticated: false,
   loginUser: () => {},
   logoutUser: () => {}
 })
@@ -25,7 +25,7 @@ const UserContextProvider: FunctionComponent<UserContextProviderProps> = ({
 }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
-  const isAutheticated = currentUser !== null
+  const isAuthenticated = currentUser !== null
 
   const loginUser = (user: User) => {
     setCurrentUser(user)
@@ -36,7 +36,7 @@ const UserContextProvider: FunctionComponent<UserContextProviderProps> = ({
   }
   return (
     <UserContext.Provider
-      value={{ currentUser, isAutheticated, loginUser, logoutUser }}
+      value={{ currentUser, isAuthenticated, loginUser, logoutUser }}
     >
       {children}
     </UserContext.Provider>

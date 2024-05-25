@@ -50,15 +50,15 @@ const SingUpPage = () => {
 
   const watchPassword = watch('password')
 
-  const { isAutheticated } = useContext(UserContext)
+  const { isAuthenticated } = useContext(UserContext)
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (isAutheticated) {
+    if (isAuthenticated) {
       navigate('/')
     }
-  }, [isAutheticated])
+  }, [isAuthenticated])
 
   const handleSubmitPress = async (data: SingUpForm) => {
     try {

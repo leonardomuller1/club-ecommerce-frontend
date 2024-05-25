@@ -19,7 +19,7 @@ import { CartContext } from '../../contexts/cart.context'
 
 const Header = () => {
   const navigate = useNavigate()
-  const { isAutheticated } = useContext(UserContext)
+  const { isAuthenticated } = useContext(UserContext)
   const { toggleCart, productsCount } = useContext(CartContext)
 
   const handleLogiClick = () => {
@@ -43,13 +43,13 @@ const Header = () => {
       <HeaderTitle onClick={handleLogiClick}>CLUB CLOTHING</HeaderTitle>
       <HeaderItems>
         <HeaderItem onClick={handleExploreClick}>Explorar</HeaderItem>
-        {!isAutheticated && (
+        {!isAuthenticated && (
           <>
             <HeaderItem onClick={handleLoginClick}>Login</HeaderItem>
             <HeaderItem onClick={handleSingUpClick}>Criar conta</HeaderItem>
           </>
         )}
-        {isAutheticated && (
+        {isAuthenticated && (
           <HeaderItem onClick={() => signOut(auth)}>Sair</HeaderItem>
         )}
         <HeaderItem onClick={toggleCart}>

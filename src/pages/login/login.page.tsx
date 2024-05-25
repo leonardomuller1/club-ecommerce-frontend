@@ -45,14 +45,14 @@ const LoginPage = () => {
     setError
   } = useForm<LoginForm>()
   const [isLoading, setIsLoading] = useState(false)
-  const { isAutheticated } = useContext(UserContext)
+  const { isAuthenticated } = useContext(UserContext)
 
   const navigate = useNavigate()
   useEffect(() => {
-    if (isAutheticated) {
+    if (isAuthenticated) {
       navigate('/')
     }
-  }, [isAutheticated])
+  }, [isAuthenticated])
 
   const handleSubmitPress = async (data: LoginForm) => {
     try {

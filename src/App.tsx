@@ -19,22 +19,23 @@ import { userConvert } from './converts/firestore.converters'
 //Components
 import Loading from './components/loading/loading.component'
 import Cart from './components/cart/cart.component'
+import Authentication from './components/authentication/authentication.component'
 
 const App = () => {
   const [isInitializing, setIsInitializing] = useState(true)
 
-  const { isAutheticated, loginUser, logoutUser } = useContext(UserContext)
+  const { isAuthenticated, loginUser, logoutUser } = useContext(UserContext)
 
   onAuthStateChanged(auth, async (user) => {
     // se esta fazendo logout
-    const isSigningOut = isAutheticated && !user
+    const isSigningOut = isAuthenticated && !user
     if (isSigningOut) {
       logoutUser()
       return setIsInitializing(false)
     }
 
     // se esta fazendo login
-    const isSigninIn = !isAutheticated && user
+    const isSigninIn = !isAuthenticated && user
     if (isSigninIn) {
       const querySnapchot = await getDocs(
         query(
@@ -59,7 +60,14 @@ const App = () => {
         <Route path='/' element={<HomePage />} />
         <Route path='/explore' element={<ExplorePage />} />
         <Route path='/category/:id' element={<CategoryDetailsPage />} />
-        <Route path='/checkout' element={<CheckoutPage />} />
+        <Route
+          path='/checkout'
+          element={
+            <Authentication>
+              <CheckoutPage />
+            </Authentication>
+          }
+        />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/singup' element={<SingUpPage />} />
       </Routes>
