@@ -19,7 +19,7 @@ import { userConvert } from './converts/firestore.converters'
 //Components
 import Loading from './components/loading/loading.component'
 import Cart from './components/cart/cart.component'
-import Authentication from './components/authentication/authentication.component'
+import AuthenticationGuard from './guards/authentication.guard'
 
 const App = () => {
   const [isInitializing, setIsInitializing] = useState(true)
@@ -63,9 +63,9 @@ const App = () => {
         <Route
           path='/checkout'
           element={
-            <Authentication>
+            <AuthenticationGuard>
               <CheckoutPage />
-            </Authentication>
+            </AuthenticationGuard>
           }
         />
         <Route path='/login' element={<LoginPage />} />
