@@ -15,6 +15,7 @@ import {
 // Utilities
 import { CartContext } from '../../contexts/cart.context'
 import { auth } from '../../config/firebase.config'
+import { logout } from '../../store/reducers/user/user.actions'
 
 const Header = () => {
   const navigate = useNavigate()
@@ -24,6 +25,7 @@ const Header = () => {
   const { isAuthenticated } = useSelector(
     (rootReducer: any) => rootReducer.userReducer
   )
+
   const { productsCount, toggleCart } = useContext(CartContext)
 
   const handleLogoClick = () => {
@@ -43,7 +45,7 @@ const Header = () => {
   }
 
   const handleSignOutClick = () => {
-    dispatch({ type: 'LOGOUT_USER' })
+    dispatch(logout())
     signOut(auth)
   }
 
