@@ -1,17 +1,18 @@
 import { useContext, useEffect } from 'react'
 
-//components
+// Components
 import CategoryItem from '../category-item/category-item.component'
 import Loading from '../loading/loading.component'
 
-//styles
+// Styles
 import { CategoriesContainer, CategoriesContent } from './categories.styles'
 
-//utilities
+// Utilities
 import { CategoryContext } from '../../contexts/category.context'
 
 const Categories = () => {
   const { categories, isLoading, fetchCategories } = useContext(CategoryContext)
+
   useEffect(() => {
     fetchCategories()
   }, [])
@@ -21,8 +22,8 @@ const Categories = () => {
       {isLoading && <Loading />}
       <CategoriesContent>
         {categories.map((category) => (
-          <div>
-            <CategoryItem category={category} key={category.id} />
+          <div key={category.id}>
+            <CategoryItem category={category} />
           </div>
         ))}
       </CategoriesContent>

@@ -18,6 +18,7 @@ export const HeaderTitle = styled.h2`
     cursor: pointer;
   }
 `
+
 export const HeaderItems = styled.div`
   display: flex;
   align-items: center;

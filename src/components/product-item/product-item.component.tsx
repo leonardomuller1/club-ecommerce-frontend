@@ -1,17 +1,17 @@
 import { FunctionComponent, useContext } from 'react'
 import { BsCartPlus } from 'react-icons/bs'
 
-//components
+// Components
 import CustomButton from '../custom-button/custom-button.component'
 
-//styles
+// Styles
 import {
   ProductContainer,
   ProductImage,
   ProductInfo
 } from './product-item.styles'
 
-//utilities
+// Utilities
 import Product from '../../types/product.types'
 import { CartContext } from '../../contexts/cart.context'
 
@@ -36,7 +36,7 @@ const ProductItem: FunctionComponent<ProductItemProps> = ({ product }) => {
 
       <ProductInfo>
         <p>{product.name}</p>
-        <p>{product.price}</p>
+        <p>R${product.price}</p>
       </ProductInfo>
     </ProductContainer>
   )

@@ -1,24 +1,24 @@
 import { FunctionComponent, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { BiChevronLeft } from 'react-icons/bi'
 import { collection, getDocs, query, where } from 'firebase/firestore'
+import { BiChevronLeft } from 'react-icons/bi'
+import { useNavigate } from 'react-router-dom'
 
-//components
-import Loading from '../loading/loading.component'
+// Utilities
+import { db } from '../../config/firebase.config'
+import { categoryConverter } from '../../converters/firestore.converters'
+import Category from '../../types/category.types'
+
+// Components
 import ProductItem from '../product-item/product-item.component'
+import Loading from '../loading/loading.component'
 
-//styles
+// Styles
 import {
   Container,
   CategoryTitle,
   IconContainer,
   ProductsContainer
 } from './category-details.styles'
-
-//utilities
-import { db } from '../../config/firebase.config'
-import { categoryConvert } from '../../converts/firestore.converters'
-import Category from '../../types/category.types'
 
 interface CategoryDetailsProps {
   categoryId: string
@@ -28,9 +28,10 @@ const CategoryDetails: FunctionComponent<CategoryDetailsProps> = ({
   categoryId
 }) => {
   const [category, setCategory] = useState<Category | null>(null)
-  const [isLoading, SetIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
+
   const handleBackClick = () => {
     navigate('/')
   }
@@ -38,19 +39,22 @@ const CategoryDetails: FunctionComponent<CategoryDetailsProps> = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        SetIsLoading(true)
+        setIsLoading(true)
+
         const querySnapshot = await getDocs(
           query(
-            collection(db, 'categories').withConverter(categoryConvert),
+            collection(db, 'categories').withConverter(categoryConverter),
             where('id', '==', categoryId)
           )
         )
+
         const category = querySnapshot.docs[0]?.data()
+
         setCategory(category)
       } catch (error) {
         console.log(error)
       } finally {
-        SetIsLoading(false)
+        setIsLoading(false)
       }
     }
 
@@ -70,10 +74,11 @@ const CategoryDetails: FunctionComponent<CategoryDetailsProps> = ({
 
       <ProductsContainer>
         {category?.products.map((product) => (
-          <ProductItem product={product} key={product.id} />
+          <ProductItem key={product.id} product={product} />
         ))}
       </ProductsContainer>
     </Container>
   )
 }
+
 export default CategoryDetails

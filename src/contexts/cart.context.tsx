@@ -1,13 +1,10 @@
 import {
-  FunctionComponent,
-  ReactNode,
   createContext,
+  FunctionComponent,
   useEffect,
   useMemo,
   useState
 } from 'react'
-
-//utilities
 import CartProduct from '../types/cart.types'
 import Product from '../types/product.types'
 
@@ -19,8 +16,8 @@ interface ICartContext {
   toggleCart: () => void
   addProductToCart: (product: Product) => void
   removeProductFromCart: (productId: string) => void
-  increaseProductQuantity: (Product: string) => void
-  decreaseProductQuantity: (Product: string) => void
+  increaseProductQuantity: (productId: string) => void
+  decreaseProductQuantity: (productId: string) => void
   clearProducts: () => void
 }
 
@@ -37,39 +34,20 @@ export const CartContext = createContext<ICartContext>({
   clearProducts: () => {}
 })
 
-interface CartContextProviderProps {
-  children: ReactNode
-}
-
-const CartContextProvider: FunctionComponent<CartContextProviderProps> = ({
-  children
-}) => {
+const CartContextProvider: FunctionComponent = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [products, setProducts] = useState<CartProduct[]>([])
 
-  let recuperado = 0 //controle se veio do localstorage ou não -  0 nao e 1 sim
   useEffect(() => {
     const productsFromLocalStorage = JSON.parse(
       localStorage.getItem('cartProducts')!
     )
 
     setProducts(productsFromLocalStorage)
-
-    recuperado = 1
   }, [])
 
   useEffect(() => {
-    if (recuperado == 0) {
-      localStorage.setItem('cartProducts', JSON.stringify(products))
-    }
-
-    recuperado = 0
-  }, [products])
-
-  const productsCount = useMemo(() => {
-    return products.reduce((acc, currentProduct) => {
-      return acc + currentProduct.quantity
-    }, 0)
+    localStorage.setItem('cartProducts', JSON.stringify(products))
   }, [products])
 
   const productsTotalPrice = useMemo(() => {
@@ -78,25 +56,34 @@ const CartContextProvider: FunctionComponent<CartContextProviderProps> = ({
     }, 0)
   }, [products])
 
+  const productsCount = useMemo(() => {
+    return products.reduce((acc, currentProduct) => {
+      return acc + currentProduct.quantity
+    }, 0)
+  }, [products])
+
   const toggleCart = () => {
     setIsVisible((prevState) => !prevState)
   }
 
   const addProductToCart = (product: Product) => {
+    // verificar se o produto já está no carrinho
     const productIsAlreadyInCart = products.some(
       (item) => item.id === product.id
     )
 
+    // se sim -> aumentar sua quantidade
     if (productIsAlreadyInCart) {
-      return setProducts((products) => [
-        ...products.map((item) =>
+      return setProducts((products) =>
+        products.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )
-      ])
+      )
     }
 
+    // se não -> adicioná-lo
     setProducts((prevState) => [...prevState, { ...product, quantity: 1 }])
   }
 
@@ -136,17 +123,16 @@ const CartContextProvider: FunctionComponent<CartContextProviderProps> = ({
     <CartContext.Provider
       value={{
         isVisible,
+        products,
         productsTotalPrice,
         productsCount,
-        products,
         toggleCart,
         addProductToCart,
         removeProductFromCart,
         increaseProductQuantity,
         decreaseProductQuantity,
         clearProducts
-      }}
-    >
+      }}>
       {children}
     </CartContext.Provider>
   )

@@ -1,57 +1,69 @@
-//components
 import { useContext } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { BsCart3 } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 
-//styles
+// Styles
 import {
   HeaderContainer,
-  HeaderTitle,
   HeaderItems,
-  HeaderItem
+  HeaderItem,
+  HeaderTitle
 } from './header.styles'
 
-//utilities
-import { auth } from '../../config/firebase.config'
-import { UserContext } from '../../contexts/user.context'
+// Utilities
 import { CartContext } from '../../contexts/cart.context'
+import { auth } from '../../config/firebase.config'
 
 const Header = () => {
   const navigate = useNavigate()
-  const { isAuthenticated } = useContext(UserContext)
-  const { toggleCart, productsCount } = useContext(CartContext)
 
-  const handleLogiClick = () => {
+  const dispatch = useDispatch()
+
+  const { isAuthenticated } = useSelector(
+    (rootReducer: any) => rootReducer.userReducer
+  )
+  const { productsCount, toggleCart } = useContext(CartContext)
+
+  const handleLogoClick = () => {
     navigate('/')
-  }
-
-  const handleExploreClick = () => {
-    navigate('/explore')
   }
 
   const handleLoginClick = () => {
     navigate('/login')
   }
 
-  const handleSingUpClick = () => {
-    navigate('/singup')
+  const handleSignUpClick = () => {
+    navigate('/sign-up')
+  }
+
+  const handleExploreClick = () => {
+    navigate('/explore')
+  }
+
+  const handleSignOutClick = () => {
+    dispatch({ type: 'LOGOUT_USER' })
+    signOut(auth)
   }
 
   return (
     <HeaderContainer>
-      <HeaderTitle onClick={handleLogiClick}>CLUB CLOTHING</HeaderTitle>
+      <HeaderTitle onClick={handleLogoClick}>CLUB CLOTHING</HeaderTitle>
+
       <HeaderItems>
         <HeaderItem onClick={handleExploreClick}>Explorar</HeaderItem>
         {!isAuthenticated && (
           <>
             <HeaderItem onClick={handleLoginClick}>Login</HeaderItem>
-            <HeaderItem onClick={handleSingUpClick}>Criar conta</HeaderItem>
+            <HeaderItem onClick={handleSignUpClick}>Criar Conta</HeaderItem>
           </>
         )}
+
         {isAuthenticated && (
-          <HeaderItem onClick={() => signOut(auth)}>Sair</HeaderItem>
+          <HeaderItem onClick={handleSignOutClick}>Sair</HeaderItem>
         )}
+
         <HeaderItem onClick={toggleCart}>
           <BsCart3 size={25} />
           <p style={{ marginLeft: 5 }}>{productsCount}</p>

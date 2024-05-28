@@ -1,18 +1,18 @@
 const Colors = {
   primary: '#212529',
   text: {
-    white: '#f8f9fa',
-    dark: '#343a40'
+    white: '#F8F9FA',
+    dark: '#343A40'
   },
   background: {
     dark: '#212529',
-    white: 'f8f9fa'
+    white: '#F8F9FA'
   },
   input: {
     background: '#E9ECEF',
-    placeholder: '#6c757d'
+    placeholder: '#6C757D'
   },
-  error: '#ff6a6a',
+  error: '#FF6A6A',
   success: '#198754'
 }
 

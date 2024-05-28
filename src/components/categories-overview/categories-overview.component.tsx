@@ -1,14 +1,14 @@
 import { FunctionComponent, useContext, useEffect } from 'react'
 
-//components
-import CategoryOverview from '../category-overview/category-overview.component'
-import Loading from '../loading/loading.component'
-
-//styles
+// Styles
 import { Container } from './categories-overview.styles'
 
-//utilits
+// Utilities
 import { CategoryContext } from '../../contexts/category.context'
+
+// Components
+import CategoryOverview from '../category-overview/category-overview.component'
+import Loading from '../loading/loading.component'
 
 const CategoriesOverview: FunctionComponent = () => {
   const { categories, isLoading, fetchCategories } = useContext(CategoryContext)
@@ -24,7 +24,7 @@ const CategoriesOverview: FunctionComponent = () => {
   return (
     <Container>
       {categories.map((category) => (
-        <CategoryOverview category={category} key={category.id} />
+        <CategoryOverview key={category.id} category={category} />
       ))}
     </Container>
   )

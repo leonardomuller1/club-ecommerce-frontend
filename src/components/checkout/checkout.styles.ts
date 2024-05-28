@@ -29,22 +29,24 @@ export const CheckoutProducts = styled.div`
   margin-top: 15px;
   margin-bottom: 15px;
 
-  /* WebKit */
-  &::-webkit-scrollbar {
-    width: 4px;
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
   }
 
-  &::-webkit-scrollbar-track {
+  /* Track */
+  ::-webkit-scrollbar-track {
     background: ${Colors.input.background};
   }
 
-  &::-webkit-scrollbar-thumb {
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
     background: ${Colors.text.dark};
-    border-radius: 5px;
   }
 
-  &::-webkit-scrollbar-thumb:hover {
-    background: ${Colors.text.white};
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${Colors.text.dark};
   }
 `
 

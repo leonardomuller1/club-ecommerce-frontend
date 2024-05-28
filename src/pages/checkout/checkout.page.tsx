@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'react'
 
-//components
-import Header from '../../components/header/header.component'
+// Components
 import Checkout from '../../components/checkout/checkout.component'
+import Header from '../../components/header/header.component'
 
 const CheckoutPage: FunctionComponent = () => {
   return (

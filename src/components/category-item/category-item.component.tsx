@@ -1,11 +1,11 @@
 import { FunctionComponent } from 'react'
-
-//Styles
-import { CategoryItemContainer, CategoryName } from './category-item.styles'
+import { useNavigate } from 'react-router-dom'
 
 // Utilities
 import Category from '../../types/category.types'
-import { useNavigate } from 'react-router-dom'
+
+// Styles
+import { CategoryItemContainer, CategoryName } from './category-item.styles'
 
 interface CategoryItemProps {
   category: Category
@@ -13,12 +13,13 @@ interface CategoryItemProps {
 
 const CategoryItem: FunctionComponent<CategoryItemProps> = ({ category }) => {
   const navigate = useNavigate()
-  const haldleExploreClick = () => {
+
+  const handleExploreClick = () => {
     navigate(`/category/${category.id}`)
   }
   return (
     <CategoryItemContainer backgroundImage={category.imageUrl}>
-      <CategoryName onClick={haldleExploreClick}>
+      <CategoryName onClick={handleExploreClick}>
         <p>{category.displayName}</p>
         <p>Explorar</p>
       </CategoryName>

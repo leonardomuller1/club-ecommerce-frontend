@@ -1,9 +1,10 @@
-import { useContext, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { BsGoogle } from 'react-icons/bs'
 import { FiLogIn } from 'react-icons/fi'
-import { isEmail } from 'validator'
+import { useForm } from 'react-hook-form'
+import validator from 'validator'
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 import {
   AuthError,
@@ -12,14 +13,14 @@ import {
   signInWithPopup
 } from 'firebase/auth'
 
-// components
-import Header from '../../components/header/header.component'
+// Components
 import CustomButton from '../../components/custom-button/custom-button.component'
 import CustomInput from '../../components/custom-input/custom-input.component'
+import Header from '../../components/header/header.component'
 import InputErrorMessage from '../../components/input-error-message/input-error-message.component'
 import Loading from '../../components/loading/loading.component'
 
-// styles
+// Styles
 import {
   LoginContainer,
   LoginContent,
@@ -28,9 +29,8 @@ import {
   LoginSubtitle
 } from './login.styles'
 
-//utilits
+// Utilities
 import { auth, db, googleProvider } from '../../config/firebase.config'
-import { UserContext } from '../../contexts/user.context'
 
 interface LoginForm {
   email: string
@@ -40,14 +40,18 @@ interface LoginForm {
 const LoginPage = () => {
   const {
     register,
-    formState: { errors },
     handleSubmit,
-    setError
+    setError,
+    formState: { errors }
   } = useForm<LoginForm>()
-  const [isLoading, setIsLoading] = useState(false)
-  const { isAuthenticated } = useContext(UserContext)
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const { isAuthenticated } = useSelector(
+    (rootReducer: any) => rootReducer.userReducer
+  )
   const navigate = useNavigate()
+
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/')
@@ -57,6 +61,7 @@ const LoginPage = () => {
   const handleSubmitPress = async (data: LoginForm) => {
     try {
       setIsLoading(true)
+
       const userCredentials = await signInWithEmailAndPassword(
         auth,
         data.email,
@@ -67,8 +72,12 @@ const LoginPage = () => {
     } catch (error) {
       const _error = error as AuthError
 
-      if (_error.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
+      if (_error.code === AuthErrorCodes.INVALID_PASSWORD) {
         return setError('password', { type: 'mismatch' })
+      }
+
+      if (_error.code === AuthErrorCodes.USER_DELETED) {
+        return setError('email', { type: 'notFound' })
       }
     } finally {
       setIsLoading(false)
@@ -78,26 +87,27 @@ const LoginPage = () => {
   const handleSignInWithGooglePress = async () => {
     try {
       setIsLoading(true)
-      const userCredencials = await signInWithPopup(auth, googleProvider)
 
-      const querySnapshpt = await getDocs(
+      const userCredentials = await signInWithPopup(auth, googleProvider)
+
+      const querySnapshot = await getDocs(
         query(
           collection(db, 'users'),
-          where('id', '==', userCredencials.user.uid)
+          where('id', '==', userCredentials.user.uid)
         )
       )
 
-      const user = querySnapshpt.docs[0]?.data()
+      const user = querySnapshot.docs[0]?.data()
 
       if (!user) {
-        const firstName = userCredencials.user.displayName?.split(' ')[0]
-        const lastName = userCredencials.user.displayName?.split(' ')[1]
+        const firstName = userCredentials.user.displayName?.split(' ')[0]
+        const lastName = userCredentials.user.displayName?.split(' ')[1]
 
         await addDoc(collection(db, 'users'), {
-          id: userCredencials.user.uid,
-          email: userCredencials.user.email,
-          firstName: firstName,
-          lastName: lastName,
+          id: userCredentials.user.uid,
+          email: userCredentials.user.email,
+          firstName,
+          lastName,
           provider: 'google'
         })
       }
@@ -113,62 +123,70 @@ const LoginPage = () => {
       <Header />
 
       {isLoading && <Loading />}
+
       <LoginContainer>
         <LoginContent>
           <LoginHeadline>Entre com a sua conta</LoginHeadline>
+
           <CustomButton
-            onClick={handleSignInWithGooglePress}
             startIcon={<BsGoogle size={18} />}
-          >
+            onClick={handleSignInWithGooglePress}>
             Entrar com o Google
           </CustomButton>
+
           <LoginSubtitle>ou entre com o seu e-mail</LoginSubtitle>
+
           <LoginInputContainer>
             <p>E-mail</p>
             <CustomInput
-              hasError={errors.email ? true : false}
-              placeholder='Digite seu e-mail'
-              type='email'
+              hasError={!!errors?.email}
+              placeholder="Digite seu e-mail"
               {...register('email', {
                 required: true,
                 validate: (value) => {
-                  return isEmail(value)
+                  return validator.isEmail(value)
                 }
               })}
             />
 
             {errors?.email?.type === 'required' && (
-              <InputErrorMessage>E-mail é obrigatório</InputErrorMessage>
+              <InputErrorMessage>O e-mail é obrigatório.</InputErrorMessage>
+            )}
+
+            {errors?.email?.type === 'notFound' && (
+              <InputErrorMessage>
+                O e-mail não foi encontrado.
+              </InputErrorMessage>
             )}
 
             {errors?.email?.type === 'validate' && (
               <InputErrorMessage>
-                Precisa ser um e-mail valido
+                Por favor, insira um e-mail válido.
               </InputErrorMessage>
             )}
           </LoginInputContainer>
+
           <LoginInputContainer>
             <p>Senha</p>
             <CustomInput
-              hasError={errors.password ? true : false}
-              placeholder='Digite sua senha'
-              type='password'
-              {...register('password', {
-                required: true
-              })}
+              hasError={!!errors?.password}
+              placeholder="Digite sua senha"
+              type="password"
+              {...register('password', { required: true })}
             />
+
             {errors?.password?.type === 'required' && (
-              <InputErrorMessage>Senha é obrigatória</InputErrorMessage>
+              <InputErrorMessage>A senha é obrigatória.</InputErrorMessage>
             )}
+
             {errors?.password?.type === 'mismatch' && (
-              <InputErrorMessage>Senha ou e-mail invalido</InputErrorMessage>
+              <InputErrorMessage>A senha é inválida.</InputErrorMessage>
             )}
           </LoginInputContainer>
 
           <CustomButton
             startIcon={<FiLogIn size={18} />}
-            onClick={handleSubmit(handleSubmitPress)}
-          >
+            onClick={() => handleSubmit(handleSubmitPress)()}>
             Entrar
           </CustomButton>
         </LoginContent>

@@ -1,14 +1,15 @@
 import { FunctionComponent } from 'react'
-
-//components
-import Header from '../../components/header/header.component'
-import CategoryDetails from '../../components/category-details/category-details.component'
 import { useParams } from 'react-router-dom'
+
+import CategoryDetails from '../../components/category-details/category-details.component'
+
+import Header from '../../components/header/header.component'
 
 const CategoryDetailsPage: FunctionComponent = () => {
   const { id } = useParams()
 
   if (!id) return null
+
   return (
     <>
       <Header />

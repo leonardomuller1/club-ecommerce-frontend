@@ -1,6 +1,11 @@
 import { FunctionComponent, useContext } from 'react'
 import { AiOutlinePlus, AiOutlineMinus, AiOutlineClose } from 'react-icons/ai'
-//styles
+import { CartContext } from '../../contexts/cart.context'
+
+// Utilities
+import CartProduct from '../../types/cart.types'
+
+// Styles
 import {
   CartItemContainer,
   CartItemImage,
@@ -8,10 +13,6 @@ import {
   CartItemQuantity,
   RemoveButton
 } from './cart-item.styles'
-
-//utilities
-import CartProduct from '../../types/cart.types'
-import { CartContext } from '../../contexts/cart.context'
 
 interface CartItemProps {
   product: CartProduct
@@ -28,25 +29,26 @@ const CartItem: FunctionComponent<CartItemProps> = ({ product }) => {
     removeProductFromCart(product.id)
   }
 
-  const HandleIncreaseClick = () => {
+  const handleIncreaseClick = () => {
     increaseProductQuantity(product.id)
   }
 
-  const HandleDecreaseClick = () => {
+  const handleDecreaseClick = () => {
     decreaseProductQuantity(product.id)
   }
+
   return (
     <CartItemContainer>
       <CartItemImage imageUrl={product.imageUrl} />
 
       <CartItemInfo>
         <p>{product.name}</p>
-        <p>R$ {product.price}</p>
+        <p>R${product.price}</p>
 
         <CartItemQuantity>
-          <AiOutlineMinus size={20} onClick={HandleDecreaseClick} />
+          <AiOutlineMinus size={20} onClick={handleDecreaseClick} />
           <p>{product.quantity}</p>
-          <AiOutlinePlus size={20} onClick={HandleIncreaseClick} />
+          <AiOutlinePlus size={20} onClick={handleIncreaseClick} />
         </CartItemQuantity>
       </CartItemInfo>
 
